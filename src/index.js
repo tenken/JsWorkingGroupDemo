@@ -33,9 +33,13 @@ function handleClick(e) {
   const secretApiKey = "U7TushNJS7AGrt8nucft8FqfVdwvRlsB";
   const ucsbApiEndpoint =
     "https://test.api.ucsb.edu/employees/employeemap/v1/?id=";
-  const apiHeaders = { headers: { "ucsb-api-key": secretApiKey } };
+    const options = {
+        credentials: 'include',
+        method: 'GET',
+        headers: { "ucsb-api-key": secretApiKey }
+    };
 
-  fetch(ucsbApiEndpoint, apiHeaders)
+  fetch(ucsbApiEndpoint, options)
     .then(function(response) {
       return response.json();
     })
