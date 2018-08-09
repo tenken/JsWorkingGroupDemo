@@ -1,2 +1,0 @@
-# JsWorkingGroupDemo
-Created with CodeSandbox
