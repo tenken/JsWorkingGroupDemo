@@ -10,6 +10,10 @@ export default class App extends React.Component {
       old: "",
       new: ""
     };
+
+    // https://reactjs.org/docs/handling-events.html
+    this.handleClick = this.handleClick.bind(this);
+    this.saveOld = this.saveOld.bind(this);
   }
 
   render() {
@@ -17,35 +21,57 @@ export default class App extends React.Component {
       <div className="App">
         <h1>UCSB</h1>
         <h2>UCSB JS Working Group</h2>
-        <h3>use kevin's api for employee id translation </h3>
+        <h3>use Kevin's api for employee id translation </h3>
 
         <form id="employeeid-in">
-          <label htmlFor="old" />
-          <input type="text" id="old" />
-          <button onclick={() => this.handleClick}>Go</button>
+          <label htmlFor="old">{this.state.old}</label>
+          <input type="text" id="old" onChange={this.saveOld} />
+          <button onClick={this.handleClick}>Go</button>
         </form>
+        <h3>{this.state.new}</h3>
       </div>
     );
   }
-}
 
-function handleClick(e) {
-  const secretApiKey = "U7TushNJS7AGrt8nucft8FqfVdwvRlsB";
-  const ucsbApiEndpoint =
-    "https://test.api.ucsb.edu/employees/employeemap/v1/?id=";
+  // https://reactjs.org/docs/lifting-state-up.html
+  saveOld(event) {
+    this.setState({ old: event.target.value });
+  }
+
+  handleClick(e) {
+    e.preventDefault();
+    console.log("The link was clicked.");
+    const secretApiKey = "U7TushNJS7AGrt8nucft8FqfVdwvRlsB";
+    const ucsbApiEndpoint = `https://test.api.ucsb.edu/employees/employeemap/v1/?id=${
+      this.state.old
+    }`;
+    console.log(JSON.stringify(ucsbApiEndpoint));
     const options = {
-        credentials: 'include',
-        method: 'GET',
-        headers: { "ucsb-api-key": secretApiKey }
+      method: "GET",
+      headers: { "ucsb-api-key": secretApiKey }
     };
 
-  fetch(ucsbApiEndpoint, options)
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(myJson) {
-      console.log(myJson);
-    });
+    this.setState({ new: "9876543" }); // stubbing a response until we can solve fetch issues
+
+    // fetch best-practice on querystring values.
+    // https://github.com/github/fetch/issues/256#issuecomment-170228674
+    fetch(ucsbApiEndpoint, options).then(
+      function(response) {
+        console.log("i fetched " + JSON.stringify(response));
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          var error = new Error(response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      function(error) {
+        console.log(error.message); //=> String
+      }
+    );
+    console.log("line 67");
+  }
 }
 
 const rootElement = document.getElementById("root");
