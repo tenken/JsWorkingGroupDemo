@@ -1,4 +1,20 @@
 .App {
-  font-family: sans-serif;
+  font-family:cursive;
   text-align: center;
+  color:coral;
+  background:aqua;
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  border: outset 10px;
+  margin: 15px;
+  padding: 20px;
+}
+
+input{
+  border: inset 3px;
+}
+
+button{
+  padding: 10px;
 }
