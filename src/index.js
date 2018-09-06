@@ -51,26 +51,20 @@ export default class App extends React.Component {
       headers: { "ucsb-api-key": secretApiKey }
     };
 
-    this.setState({ new: "9876543" }); // stubbing a response until we can solve fetch issues
+    //this.setState({ new: "9876543" }); // stubbing a response until we can solve fetch issues
 
     // fetch best-practice on querystring values.
     // https://github.com/github/fetch/issues/256#issuecomment-170228674
-    fetch(ucsbApiEndpoint, options).then(
-      function(response) {
-        console.log("i fetched " + JSON.stringify(response));
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          var error = new Error(response.statusText);
-          error.response = response;
-          throw error;
-        }
-      },
-      function(error) {
-        console.log(error.message); //=> String
-      }
-    );
-    console.log("line 67");
+    fetch(ucsbApiEndpoint, options)
+      .then(res => {
+        return res.json();
+      })
+      .then(json => {
+        console.log(JSON.stringify(json));
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 }
 
