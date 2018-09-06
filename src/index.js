@@ -44,9 +44,16 @@ export default class App extends React.Component {
     }`;
 
     //console.log(JSON.stringify(ucsbApiEndpoint));
+
+    const data = { id: [this.state.old] };
+
     const options = {
-      method: "GET",
-      headers: { "ucsb-api-key": secretApiKey }
+      method: "POST",
+      headers: {
+        "ucsb-api-key": secretApiKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
     };
 
     // fetch best-practice on querystring values.
