@@ -46,7 +46,9 @@ export default class App extends React.Component {
 
     //console.log(JSON.stringify(ucsbApiEndpoint));
 
-    const data = { id: [this.state.old] };
+    const ids = this.state.old.split('\n');
+
+    const data = { id: ids };
 
     const options = {
       method: "POST",
@@ -64,6 +66,8 @@ export default class App extends React.Component {
         return res.json();
       })
       .then(json => {
+
+        // Next time loop over array and save that in "new"
         this.setState({
           new: json[0].OutputId,
           message: json[0].errorMsg.Message
