@@ -23,11 +23,8 @@ export default class App extends React.Component {
         <h1>UCSB</h1>
         <h2>UCSB JS Working Group</h2>
         <h3>use Kevin's api for employee id translation </h3>
-
-        <form id="employeeid-in">
-          <input type="text" id="old" onChange={this.saveOld} />
-          <button onClick={this.handleClick}>Go</button>
-        </form>
+        <input type="text" id="old" onChange={this.saveOld} />
+        <button onClick={this.handleClick}>Go</button>
         <h3>{this.state.new}</h3>
         <h4>{this.state.message}</h4>
       </div>
@@ -40,13 +37,13 @@ export default class App extends React.Component {
   }
 
   handleClick(e) {
-    e.preventDefault();
-    console.log("The link was clicked.");
+    //console.log("The link was clicked.");
     const secretApiKey = "U7TushNJS7AGrt8nucft8FqfVdwvRlsB";
     const ucsbApiEndpoint = `https://test.api.ucsb.edu/employees/employeemap/v1/?id=${
       this.state.old
     }`;
-    console.log(JSON.stringify(ucsbApiEndpoint));
+
+    //console.log(JSON.stringify(ucsbApiEndpoint));
     const options = {
       method: "GET",
       headers: { "ucsb-api-key": secretApiKey }
