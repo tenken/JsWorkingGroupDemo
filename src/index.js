@@ -23,7 +23,8 @@ export default class App extends React.Component {
         <h1>UCSB</h1>
         <h2>UCSB JS Working Group</h2>
         <h3>use Kevin's api for employee id translation </h3>
-        <input type="text" id="old" onChange={this.saveOld} />
+        <textarea id="old" onChange={this.saveOld} value={this.state.old} />
+        <br />
         <button onClick={this.handleClick}>Go</button>
         <h3>{this.state.new}</h3>
         <h4>{this.state.message}</h4>
