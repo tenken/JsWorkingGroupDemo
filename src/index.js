@@ -8,7 +8,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       old: "",
-      new: ""
+      new: "",
+      message: "Enter an employee id and click Go"
     };
 
     // https://reactjs.org/docs/handling-events.html
@@ -24,11 +25,11 @@ export default class App extends React.Component {
         <h3>use Kevin's api for employee id translation </h3>
 
         <form id="employeeid-in">
-          <label htmlFor="old">{this.state.old}</label>
           <input type="text" id="old" onChange={this.saveOld} />
           <button onClick={this.handleClick}>Go</button>
         </form>
         <h3>{this.state.new}</h3>
+        <h4>{this.state.message}</h4>
       </div>
     );
   }
@@ -51,8 +52,6 @@ export default class App extends React.Component {
       headers: { "ucsb-api-key": secretApiKey }
     };
 
-    //this.setState({ new: "9876543" }); // stubbing a response until we can solve fetch issues
-
     // fetch best-practice on querystring values.
     // https://github.com/github/fetch/issues/256#issuecomment-170228674
     fetch(ucsbApiEndpoint, options)
@@ -60,6 +59,11 @@ export default class App extends React.Component {
         return res.json();
       })
       .then(json => {
+        this.setState({
+          new: json[0].OutputId,
+          message: json[0].errorMsg.Message
+        });
+
         console.log(JSON.stringify(json));
       })
       .catch(err => {
