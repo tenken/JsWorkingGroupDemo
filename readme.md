@@ -1,5 +1,7 @@
 ## Ucsb EmployeeMap example React Component
 
+This has the API key commited in code, and even if we did not embed it, it would be visible and could be stolen. This highlights the half-baked security of Apigee.
+
 
 ### Run on local computer
 
@@ -7,7 +9,7 @@ Run locally with `npm install` then `npm start`.
 
 ### Meeting Notes from 09-06-2018
 - Got fetch working, Promises take some learning.
-- Ran on local computer, but it shoudl work in Code sandbox.
+- Ran on local computer, but it shoull work in Code sandbox.
 - Next meeting we will expand the mutiple ID lookup which means we get to work with React lists.
 
 
