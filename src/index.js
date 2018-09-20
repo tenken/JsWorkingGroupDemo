@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Results from "./Results";
 
 import "./styles.css";
 
@@ -32,9 +33,7 @@ export default class App extends React.Component {
         <br />
         <button onClick={this.handleClick}>Go</button>
         <h3>
-          <ul>
-            {this.state.new.map((item, index) => <li key={index}>{item}</li>)}
-          </ul>
+          <Results outputList={this.state.new} />
         </h3>
         <h4>{this.state.message}</h4>
       </div>
@@ -75,20 +74,22 @@ export default class App extends React.Component {
         return res.json();
       })
       .then(json => {
-        // if CR, array explode
-        // otherwise take 1stt
-        const list = json.map(item => item.OutputId);
+        const outputList = json.map(item =>
+          // This is how to return an object via map().
+          ({
+            input: item.InputId,
+            output: item.OutputId,
+            message: item.errorMsg.Message
+          })
+        );
 
         // Next time loop over array and save that in "new"
         this.setState({
-          new: list
-
-          //  json[0].OutputId,
-          //  message: json[0].errorMsg.
+          new: outputList
         });
 
         console.log(JSON.stringify(json));
-        console.log(JSON.stringify(list));
+        console.log(JSON.stringify(outputList));
       })
       .catch(err => {
         console.log(err);
