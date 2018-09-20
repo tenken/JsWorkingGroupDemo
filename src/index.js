@@ -8,8 +8,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       old: "",
-      new: "",
-      message: "Enter an employee id and click Go"
+      new: [],
+      message: "Enter an employee ID and click Go"
     };
 
     // https://reactjs.org/docs/handling-events.html
@@ -23,10 +23,19 @@ export default class App extends React.Component {
         <h1>UCSB</h1>
         <h2>UCSB JS Working Group</h2>
         <h3>use Kevin's api for employee id translation </h3>
-        <textarea id="old" onChange={this.saveOld} value={this.state.old} />
+        <textarea
+          id="old"
+          onChange={this.saveOld}
+          value={this.state.old}
+          rows="10"
+        />
         <br />
         <button onClick={this.handleClick}>Go</button>
-        <h3>{this.state.new}</h3>
+        <h3>
+          <ul>
+            {this.state.new.map((item, index) => <li key={index}>{item}</li>)}
+          </ul>
+        </h3>
         <h4>{this.state.message}</h4>
       </div>
     );
@@ -46,7 +55,7 @@ export default class App extends React.Component {
 
     //console.log(JSON.stringify(ucsbApiEndpoint));
 
-    const ids = this.state.old.split('\n');
+    const ids = this.state.old.split("\n");
 
     const data = { id: ids };
 
@@ -66,14 +75,20 @@ export default class App extends React.Component {
         return res.json();
       })
       .then(json => {
+        // if CR, array explode
+        // otherwise take 1stt
+        const list = json.map(item => item.OutputId);
 
         // Next time loop over array and save that in "new"
         this.setState({
-          new: json[0].OutputId,
-          message: json[0].errorMsg.Message
+          new: list
+
+          //  json[0].OutputId,
+          //  message: json[0].errorMsg.
         });
 
         console.log(JSON.stringify(json));
+        console.log(JSON.stringify(list));
       })
       .catch(err => {
         console.log(err);
