@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Results from "./Results";
 
 import "./styles.css";
 
@@ -8,7 +9,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       old: "",
-      new: ""
+      new: [],
+      message: "Enter an employee ID and click Go"
     };
 
     // https://reactjs.org/docs/handling-events.html
@@ -22,13 +24,18 @@ export default class App extends React.Component {
         <h1>UCSB</h1>
         <h2>UCSB JS Working Group</h2>
         <h3>use Kevin's api for employee id translation </h3>
-
-        <form id="employeeid-in">
-          <label htmlFor="old">{this.state.old}</label>
-          <input type="text" id="old" onChange={this.saveOld} />
-          <button onClick={this.handleClick}>Go</button>
-        </form>
-        <h3>{this.state.new}</h3>
+        <textarea
+          id="old"
+          onChange={this.saveOld}
+          value={this.state.old}
+          rows="10"
+        />
+        <br />
+        <button onClick={this.handleClick}>Go</button>
+        <h3>
+          <Results outputList={this.state.new} />
+        </h3>
+        <h4>{this.state.message}</h4>
       </div>
     );
   }
@@ -39,38 +46,54 @@ export default class App extends React.Component {
   }
 
   handleClick(e) {
-    e.preventDefault();
-    console.log("The link was clicked.");
+    //console.log("The link was clicked.");
     const secretApiKey = "U7TushNJS7AGrt8nucft8FqfVdwvRlsB";
     const ucsbApiEndpoint = `https://test.api.ucsb.edu/employees/employeemap/v1/?id=${
       this.state.old
     }`;
-    console.log(JSON.stringify(ucsbApiEndpoint));
-    const options = {
-      method: "GET",
-      headers: { "ucsb-api-key": secretApiKey }
-    };
 
-    this.setState({ new: "9876543" }); // stubbing a response until we can solve fetch issues
+    //console.log(JSON.stringify(ucsbApiEndpoint));
+
+    const ids = this.state.old.split("\n");
+
+    const data = { id: ids };
+
+    const options = {
+      method: "POST",
+      headers: {
+        "ucsb-api-key": secretApiKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    };
 
     // fetch best-practice on querystring values.
     // https://github.com/github/fetch/issues/256#issuecomment-170228674
-    fetch(ucsbApiEndpoint, options).then(
-      function(response) {
-        console.log("i fetched " + JSON.stringify(response));
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          var error = new Error(response.statusText);
-          error.response = response;
-          throw error;
-        }
-      },
-      function(error) {
-        console.log(error.message); //=> String
-      }
-    );
-    console.log("line 67");
+    fetch(ucsbApiEndpoint, options)
+      .then(res => {
+        return res.json();
+      })
+      .then(json => {
+        const outputList = json.map(item =>
+          // This is how to return an object via map().
+          ({
+            input: item.InputId,
+            output: item.OutputId,
+            message: item.errorMsg.Message
+          })
+        );
+
+        // Next time loop over array and save that in "new"
+        this.setState({
+          new: outputList
+        });
+
+        console.log(JSON.stringify(json));
+        console.log(JSON.stringify(outputList));
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 }
 
